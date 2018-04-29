@@ -1,0 +1,31 @@
+﻿@model MavenGeneratorViewModel
+@{ 
+    ViewData["Title"] = "Result";
+
+    var markup = ViewData["CalculatedMarkup"] as IReadOnlyList<string>;
+}
+<head>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<pre>
+    <code class="xml">
+        @{ 
+            foreach (string line in markup)
+            {
+                @(line + "\n")
+            }
+        }
+    </code>
+</pre>
+<h4>Easy copying:</h4>
+<textarea rows="4" cols="50">
+    @{ 
+        foreach (string line in markup)
+        {
+            @(line + "\n")
+        }
+    }
+</textarea>

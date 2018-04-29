@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using MavenGenerator.Models.Data;
+@model MavenGeneratorViewModel
+
+<form asp-controller="Home" method="post">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Language <span class="badge badge-secondary">Required</span></label>
+        <div class="col-sm-10">
+            <select asp-for="Language" class="custom-select mt-1" id="single_select">
+                @{
+                    foreach (Language language in Enum.GetValues(typeof(Language)))
+                    {
+                        <option value="@language">@language.ToString()</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Java version <span class="badge badge-secondary">Required</span></label>
+        <div class="col-sm-10">
+            <select asp-for="JavaVersion" class="custom-select mt-1" id="single_select">
+                <option value="1.6">Java 6</option>
+                <option value="1.7">Java 7</option>
+                <option value="1.8">Java 8</option>
+                <option value="1.9">Java 9</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Group ID <span class="badge badge-secondary">Required</span></label>
+        <div class="col-sm-10">
+            <input asp-for="GroupId" required type="text" class="form-control" placeholder="com.example">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Artifact ID <span class="badge badge-secondary">Required</span></label>
+        <div class="col-sm-10">
+            <input asp-for="ArtifactId" required type="text" class="form-control" placeholder="example">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Version <span class="badge badge-secondary">Required</span></label>
+        <div class="col-sm-10">
+            <input asp-for="Version" required type="text" class="form-control" placeholder="1.0-SNAPSHOT">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Main class</label>
+        <div class="col-sm-10">
+            <input asp-for="MainClass" type="text" class="form-control" placeholder="com.example.example.ExampleClass">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Deploy URL</label>
+        <div class="col-sm-10">
+            <input asp-for="DeployUrl" type="text" class="form-control" placeholder="http://repo.example.com/nexus-releases/">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Is bukkit plugin?</label>
+        <div class="col-sm-10">
+            <div class="form-check">
+                <input asp-for="IsBukkitPlugin" class="form-check-input"
+                       type="checkbox" value="true" checked />
+            </div>
+        </div>
+    </div>
+    @{
+        if (Convert.ToInt32(ViewData["Stage"]) == 1)
+        {
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Plugin amount</label>
+                <div class="col-sm-10">
+                    <input asp-for="PluginAmount" onchange="InputChange(this.value)"
+                           type="number" required class="form-control" value="3" placeholder="Plugin amount">
+                    <input value="Continue" class="btn btn-dark mt-3" type="submit"
+                           asp-controller="Home" asp-action="PluginAmountGenerate">
+                </div>
+            </div>
+        }
+    }
+    <div class="form-row align-items-center">
+        <div class="col-auto my-1">
+            @{
+                if (Convert.ToInt32(ViewData["Stage"]) == 2)
+                {
+
+                    <label class="mr-sm-2" for="inlineFormCustomSelect">Plugins</label>
+                    for (int i = 0; i < Model.PluginAmount; i++)
+                    {
+                        <select asp-for="Plugins[i]" class="custom-select mt-1" id="single_select">
+                            @{
+                                foreach (Plugin plugin in Enum.GetValues(typeof(Plugin)))
+                                {
+                                    <option value="@plugin">@plugin.ToString()</option>
+                                }
+                            }
+                        </select>
+                    }
+                }
+            }
+
+        </div>
+    </div>
+    @{
+        if (Convert.ToInt32(ViewData["Stage"]) == 2)
+        {
+            <input value="Generate" class="btn btn-primary mb-2 mt-4" type="submit"
+                   asp-controller="Home" asp-action="MavenGenerate">
+            <input value="Reset" class="btn btn-primary mb-2 mt-4" type="submit"
+                   asp-controller="Home" asp-action="Reset">
+        }
+    }
+</form>
